@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+echo "curl $*" >> "$FAKE_LOG"
+case "$*" in *oauth-authorization-server*) echo '{"issuer":"x","authorization_endpoint":"y"}';; esac
+exit 0

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Faux gcloud pour tester install.sh sans GCP. Journalise chaque appel.
+echo "gcloud $*" >> "$FAKE_LOG"
+args=" $* "
+case "$args" in
+  *" config get-value account "*) echo "davio@example.com" ;;
+  *" config get-value project "*) echo "" ;;
+  *" billing projects describe "*) echo "True" ;;
+  *" projects describe "*) echo "123456789012" ;;
+  *" describe "*) [[ -f "$FAKE_STATE/existing" ]] && exit 0 || exit 1 ;;
+  *" --no-invoker-iam-check"*) [[ -n "$FAKE_NO_INVOKER_FAIL" ]] && { echo "ERROR: unrecognized arguments: --no-invoker-iam-check" >&2; exit 2; } ; exit 0 ;;
+  *"--data-file=-"*) cat >/dev/null; exit 0 ;;
+  *) exit 0 ;;
+esac
